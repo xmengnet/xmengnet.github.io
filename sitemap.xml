@@ -2,10 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://xmengnet.github.io/p/new-post/</loc>
+    <lastmod>2021-09-05T22:34:54+08:00</lastmod>
+  </url><url>
+    <loc>https://xmengnet.github.io/post/</loc>
+    <lastmod>2021-09-05T22:34:54+08:00</lastmod>
+  </url><url>
+    <loc>https://xmengnet.github.io/</loc>
+    <lastmod>2021-09-05T22:34:54+08:00</lastmod>
+  </url><url>
+    <loc>https://xmengnet.github.io/p/%E5%9C%A8arch%E5%92%8Cwindows%E4%B8%8A%E5%AE%89%E8%A3%85mariadb/</loc>
+    <lastmod>2021-09-05T22:23:57+08:00</lastmod>
+  </url><url>
     <loc>https://xmengnet.github.io/categories/</loc>
   </url><url>
     <loc>https://xmengnet.github.io/tags/</loc>
-  </url><url>
-    <loc>https://xmengnet.github.io/</loc>
   </url>
 </urlset>
