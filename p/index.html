@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='title: &amp;ldquo;在Arch和Windows上安装MariaDB&amp;rdquo; date: 2021-09-05T21:43:29&#43;08:00 draft: true
+Mariadb是一个可靠的、高性能的、功能全面的数据库，旨在为用户提供长期免费的、向下兼容的、可取代MySQL的数据库服务。
+MariaDB由MySQL的创始人麦克尔·维德纽斯主导开发，他早前曾以10亿美元的价格，将自己创建的公司MySQL卖给了SUN，此后，随着SUN被甲骨文收购，MySQL的所有权也落入Oracle的手中。甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险,因此开源社区采用分支的方式来避开这个风险。所以说呢，MariaDB数据库管理系统是MySQL的一个分支，主要由开源社区在维护，采用GPL授权许可。
+ **MariaDB跟MySQL在绝大多数方面是兼容的，包括API和命令行。对于开发者来说，几乎感觉不到任何不同。但MariaDB不仅仅是Mysql的一个替代品，MariaDB在5.5版本以前，均依照MySQL的版本。但从2012年11月12日起发布的10.0.0版开始，不再依照MySQL的版号。10.0.x版以5.5版为基础，加上移植自MySQL 5.6版的功能和自行开发的新功能。在存储引擎方面，10.0.9版起使用XtraDB（名称代号为Aria）来代替MySQL的InnoDB。目前，新版本发布速度已经超过了Oracle官方的MySQL版本。**  个人感觉Mariadb跟MySQL相比更加容易安装，而且是免费的开源软件，要比MySQL好一点。
+下面先介绍在ArchLinux上安装Mariadb： sudo pacman -S mariadb mariadb-libs 安装 mariadb软件包之后，你必须在启动 mariadb.service 之前运行下面这条命令：
+sudo mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql 然后 enable 或者 start mariadb.service。
+sudo systemctl enable mariadb.service 用下面这个命令启动数据库级别的安全配置助手，来配置一些必要的安全选项（如果下面的无法使用可以试试先启动mariadb，上面的只是设置了开机自启）：
+sudo mysql_secure_installation 上面代码输入后会有个引导选择是否设置root密码，请选择No，到后面有重新设置root密码的方法，我自己的在这里设置后，后面无法登录。
+然后设置root帐号的密码（由于修改密码的操作需要停止 mysqld 守护进程，所以上面我没设置启动mariadb,如果你启动了请先关闭进程）：
+sudo mysqld_safe --skip-grant-tables &amp;amp; 执行完上面的命令后就可以连接到 MySQL 服务器了，执行以下命令：
+mysql -u root mysql 修改 root 密码：
+# FLUSH PRIVILEGES; # set password for &amp;#39;root&amp;#39;@&amp;#39;localhost&amp;#39; = password(&amp;#39;MyNewPass&amp;#39;); # FLUSH PRIVILEGES; # exit 再启动 mysqld 守护进程。'><title></title>
+
+<link rel='canonical' href='https://example.com/p/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content=''>
+<meta property='og:description' content='title: &amp;ldquo;在Arch和Windows上安装MariaDB&amp;rdquo; date: 2021-09-05T21:43:29&#43;08:00 draft: true
+Mariadb是一个可靠的、高性能的、功能全面的数据库，旨在为用户提供长期免费的、向下兼容的、可取代MySQL的数据库服务。
+MariaDB由MySQL的创始人麦克尔·维德纽斯主导开发，他早前曾以10亿美元的价格，将自己创建的公司MySQL卖给了SUN，此后，随着SUN被甲骨文收购，MySQL的所有权也落入Oracle的手中。甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险,因此开源社区采用分支的方式来避开这个风险。所以说呢，MariaDB数据库管理系统是MySQL的一个分支，主要由开源社区在维护，采用GPL授权许可。
+ **MariaDB跟MySQL在绝大多数方面是兼容的，包括API和命令行。对于开发者来说，几乎感觉不到任何不同。但MariaDB不仅仅是Mysql的一个替代品，MariaDB在5.5版本以前，均依照MySQL的版本。但从2012年11月12日起发布的10.0.0版开始，不再依照MySQL的版号。10.0.x版以5.5版为基础，加上移植自MySQL 5.6版的功能和自行开发的新功能。在存储引擎方面，10.0.9版起使用XtraDB（名称代号为Aria）来代替MySQL的InnoDB。目前，新版本发布速度已经超过了Oracle官方的MySQL版本。**  个人感觉Mariadb跟MySQL相比更加容易安装，而且是免费的开源软件，要比MySQL好一点。
+下面先介绍在ArchLinux上安装Mariadb： sudo pacman -S mariadb mariadb-libs 安装 mariadb软件包之后，你必须在启动 mariadb.service 之前运行下面这条命令：
+sudo mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql 然后 enable 或者 start mariadb.service。
+sudo systemctl enable mariadb.service 用下面这个命令启动数据库级别的安全配置助手，来配置一些必要的安全选项（如果下面的无法使用可以试试先启动mariadb，上面的只是设置了开机自启）：
+sudo mysql_secure_installation 上面代码输入后会有个引导选择是否设置root密码，请选择No，到后面有重新设置root密码的方法，我自己的在这里设置后，后面无法登录。
+然后设置root帐号的密码（由于修改密码的操作需要停止 mysqld 守护进程，所以上面我没设置启动mariadb,如果你启动了请先关闭进程）：
+sudo mysqld_safe --skip-grant-tables &amp;amp; 执行完上面的命令后就可以连接到 MySQL 服务器了，执行以下命令：
+mysql -u root mysql 修改 root 密码：
+# FLUSH PRIVILEGES; # set password for &amp;#39;root&amp;#39;@&amp;#39;localhost&amp;#39; = password(&amp;#39;MyNewPass&amp;#39;); # FLUSH PRIVILEGES; # exit 再启动 mysqld 守护进程。'>
+<meta property='og:url' content='https://example.com/p/'>
+<meta property='og:site_name' content='心梦博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' />
+<meta name="twitter:title" content="">
+<meta name="twitter:description" content="title: &amp;ldquo;在Arch和Windows上安装MariaDB&amp;rdquo; date: 2021-09-05T21:43:29&#43;08:00 draft: true
+Mariadb是一个可靠的、高性能的、功能全面的数据库，旨在为用户提供长期免费的、向下兼容的、可取代MySQL的数据库服务。
+MariaDB由MySQL的创始人麦克尔·维德纽斯主导开发，他早前曾以10亿美元的价格，将自己创建的公司MySQL卖给了SUN，此后，随着SUN被甲骨文收购，MySQL的所有权也落入Oracle的手中。甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险,因此开源社区采用分支的方式来避开这个风险。所以说呢，MariaDB数据库管理系统是MySQL的一个分支，主要由开源社区在维护，采用GPL授权许可。
+ **MariaDB跟MySQL在绝大多数方面是兼容的，包括API和命令行。对于开发者来说，几乎感觉不到任何不同。但MariaDB不仅仅是Mysql的一个替代品，MariaDB在5.5版本以前，均依照MySQL的版本。但从2012年11月12日起发布的10.0.0版开始，不再依照MySQL的版号。10.0.x版以5.5版为基础，加上移植自MySQL 5.6版的功能和自行开发的新功能。在存储引擎方面，10.0.9版起使用XtraDB（名称代号为Aria）来代替MySQL的InnoDB。目前，新版本发布速度已经超过了Oracle官方的MySQL版本。**  个人感觉Mariadb跟MySQL相比更加容易安装，而且是免费的开源软件，要比MySQL好一点。
+下面先介绍在ArchLinux上安装Mariadb： sudo pacman -S mariadb mariadb-libs 安装 mariadb软件包之后，你必须在启动 mariadb.service 之前运行下面这条命令：
+sudo mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql 然后 enable 或者 start mariadb.service。
+sudo systemctl enable mariadb.service 用下面这个命令启动数据库级别的安全配置助手，来配置一些必要的安全选项（如果下面的无法使用可以试试先启动mariadb，上面的只是设置了开机自启）：
+sudo mysql_secure_installation 上面代码输入后会有个引导选择是否设置root密码，请选择No，到后面有重新设置root密码的方法，我自己的在这里设置后，后面无法登录。
+然后设置root帐号的密码（由于修改密码的操作需要停止 mysqld 守护进程，所以上面我没设置启动mariadb,如果你启动了请先关闭进程）：
+sudo mysqld_safe --skip-grant-tables &amp;amp; 执行完上面的命令后就可以连接到 MySQL 服务器了，执行以下命令：
+mysql -u root mysql 修改 root 密码：
+# FLUSH PRIVILEGES; # set password for &amp;#39;root&amp;#39;@&amp;#39;localhost&amp;#39; = password(&amp;#39;MyNewPass&amp;#39;); # FLUSH PRIVILEGES; # exit 再启动 mysqld 守护进程。">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="https://example.com" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <h2 class="article-title">
+        <a href="/p/"></a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    1 min read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>title: &ldquo;在Arch和Windows上安装MariaDB&rdquo;
+date: 2021-09-05T21:43:29+08:00
+draft: true</p>
+<p>Mariadb是一个可靠的、高性能的、功能全面的数据库，旨在为用户提供长期免费的、向下兼容的、可取代<a class="link" href="https://wiki.archlinux.org/title/MySQL"  target="_blank" rel="noopener"
+    >MySQL</a>的数据库服务。</p>
+<p><strong>MariaDB由MySQL的创始人麦克尔·维德纽斯主导开发，他早前曾以10亿美元的价格，将自己创建的公司MySQL卖给了SUN，此后，随着SUN被甲骨文收购，MySQL的所有权也落入Oracle的手中。甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险,因此开源社区采用分支的方式来避开这个风险。所以说呢，MariaDB数据库管理系统是MySQL的一个分支，主要由开源社区在维护，采用GPL授权许可。</strong></p>
+<pre><code> **MariaDB跟MySQL在绝大多数方面是兼容的，包括API和命令行。对于开发者来说，几乎感觉不到任何不同。但MariaDB不仅仅是Mysql的一个替代品，MariaDB在5.5版本以前，均依照MySQL的版本。但从2012年11月12日起发布的10.0.0版开始，不再依照MySQL的版号。10.0.x版以5.5版为基础，加上移植自MySQL  5.6版的功能和自行开发的新功能。在存储引擎方面，10.0.9版起使用XtraDB（名称代号为Aria）来代替MySQL的InnoDB。目前，新版本发布速度已经超过了Oracle官方的MySQL版本。**
+</code></pre>
+<p>个人感觉Mariadb跟MySQL相比更加容易安装，而且是免费的开源软件，要比MySQL好一点。</p>
+<h2 id="下面先介绍在archlinux上安装mariadb">下面先介绍在ArchLinux上安装Mariadb：</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">sudo pacman -S mariadb mariadb-libs
+</code></pre></div><p>安装 <code>mariadb</code>软件包之后，你必须在启动 <code>mariadb.service</code> <strong>之前</strong>运行下面这条命令：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">sudo mariadb-install-db --user<span class="o">=</span>mysql --basedir<span class="o">=</span>/usr --datadir<span class="o">=</span>/var/lib/mysql
+</code></pre></div><p>然后 enable 或者  start  <code>mariadb.service</code>。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"> sudo systemctl <span class="nb">enable</span>  mariadb.service
+</code></pre></div><p>用下面这个命令启动数据库级别的安全配置助手，来配置一些必要的安全选项（如果下面的无法使用可以试试先启动mariadb，上面的只是设置了开机自启）：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">sudo mysql_secure_installation
+</code></pre></div><p>上面代码输入后会有个引导选择是否设置root密码，请<strong>选择No</strong>，到后面有重新设置root密码的方法，我自己的在这里设置后，后面无法登录。</p>
+<p>然后设置root帐号的密码（由于修改密码的操作需要停止 <em>mysqld</em> 守护进程，所以上面我没设置启动mariadb,如果你启动了请先关闭进程）：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">sudo mysqld_safe --skip-grant-tables <span class="p">&amp;</span>
+</code></pre></div><p>执行完上面的命令后就可以连接到 MySQL 服务器了，执行以下命令：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">mysql -u root mysql
+</code></pre></div><p>修改 root 密码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="c1"># FLUSH PRIVILEGES;
+</span><span class="c1"># set password for &#39;root&#39;@&#39;localhost&#39; = password(&#39;MyNewPass&#39;);
+</span><span class="c1"># FLUSH PRIVILEGES;
+</span><span class="c1"># exit
+</span></code></pre></div><p>再启动 <em>mysqld</em> 守护进程。</p>
+<p>由于Mariadb兼容MySQL语法，所以可以使用MySQL 的语法创建用户。</p>
+<p>上面教程参考<a class="link" href="https://wiki.archlinux.org/title/MariaDB_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29"  target="_blank" rel="noopener"
+    >MariaDB (简体中文)</a></p>
+<p><a class="link" href="https://imgtu.com/i/gUr3DS"  target="_blank" rel="noopener"
+    ><figure 
+	>
+	<a href="https://z3.ax1x.com/2021/05/11/gUr3DS.png" >
+		<img src="https://z3.ax1x.com/2021/05/11/gUr3DS.png"
+			
+			
+			
+			loading="lazy"
+			alt="gUr3DS.png">
+	</a>
+	
+	<figcaption>gUr3DS.png</figcaption>
+	
+</figure></a></p>
+<h2 id="在windows上安装mariadb">在Windows上安装Mariadb:</h2>
+<p>由于本人没有使用Windows系统，所以使用win7虚拟机安装mariadb安装后无法启动服务，使用管理员帐号也拒绝访问，又一次体现到了Windows稀巴烂的管理员权限，所以我只找了网上的教程复制到这里，理论上不会出现问题。</p>
+<h3 id="1-下载mariadb安装包">1. 下载MariaDB安装包</h3>
+<p>下载地址：<a class="link" href="https://mirrors.tuna.tsinghua.edu.cn/mariadb//mariadb-10.6.0/winx64-packages/mariadb-10.6.0-winx64.zip"  target="_blank" rel="noopener"
+    >mariadb-10.6.0-winx64.zip</a>（清华镜像源）</p>
+<p>官网：https://mariadb.org/download/ 发现在这里下载自动用的也是清华的镜像地址</p>
+<h3 id="2-解压-mariadb-1060-winx64zip-至安装目录">2. 解压 mariadb-10.6.0-winx64.zip 至安装目录</h3>
+<p><figure 
+	>
+	<a href="https://img-blog.csdnimg.cn/20200731114006890.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI2MjMwODQ3,size_16,color_FFFFFF,t_70" >
+		<img src="https://img-blog.csdnimg.cn/20200731114006890.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI2MjMwODQ3,size_16,color_FFFFFF,t_70"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="3-使用管理员身份运行cmd">3. 使用管理员身份运行cmd</h3>
+<p><figure 
+	>
+	<a href="https://img-blog.csdnimg.cn/20200731114159214.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI2MjMwODQ3,size_16,color_FFFFFF,t_70" >
+		<img src="https://img-blog.csdnimg.cn/20200731114159214.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI2MjMwODQ3,size_16,color_FFFFFF,t_70"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>建议提前配置环境变量，配置后就不需要每次都切换到解压的文件夹下的bin目录了，配置环境变量就是配置到解压文件夹的/bin下</p>
+<h3 id="5安装mariadb服务">5.安装MariaDB服务</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">mysql_install_db</span><span class="p">.</span><span class="n">exe</span> <span class="p">-</span><span class="n">-datadir</span><span class="p">=</span><span class="n">解压的文件夹</span><span class="p">\</span><span class="n">data</span> <span class="p">-</span><span class="n">-service</span><span class="p">=</span><span class="n">mariadb</span> <span class="p">-</span><span class="n">-password</span><span class="p">=</span><span class="n">123456</span> <span class="p">-</span><span class="n">-port</span><span class="p">=</span><span class="n">3306</span>
+</code></pre></div><blockquote>
+<p>参数说明：</p>
+<p>&ndash;datadir=数据目录</p>
+<p>&ndash;service=服务名称</p>
+<p>&ndash;password=root用户密码</p>
+<p>&ndash;port=端口</p>
+<p>详细参数可以执行mysql_install_db.exe &ndash;help查看</p>
+</blockquote>
+<h3 id="6-启动mariadb服务服务">6. 启动MariaDB服务服务</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">net</span> <span class="nb">start </span><span class="n">mariadb</span>
+</code></pre></div><p>至此安装完成,</p>
+<p>参考：<a class="link" href="https://blog.csdn.net/qq_26230847/article/details/107707363"  target="_blank" rel="noopener"
+    >Windows10 安装 MariaDB</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+     
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (DISQUS) {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2021 心梦博客
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.2.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#下面先介绍在archlinux上安装mariadb">下面先介绍在ArchLinux上安装Mariadb：</a></li>
+    <li><a href="#在windows上安装mariadb">在Windows上安装Mariadb:</a>
+      <ol>
+        <li><a href="#1-下载mariadb安装包">1. 下载MariaDB安装包</a></li>
+        <li><a href="#2-解压-mariadb-1060-winx64zip-至安装目录">2. 解压 mariadb-10.6.0-winx64.zip 至安装目录</a></li>
+        <li><a href="#3-使用管理员身份运行cmd">3. 使用管理员身份运行cmd</a></li>
+        <li><a href="#5安装mariadb服务">5.安装MariaDB服务</a></li>
+        <li><a href="#6-启动mariadb服务服务">6. 启动MariaDB服务服务</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

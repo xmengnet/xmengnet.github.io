@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>心梦博客</title>
+        <link>https://example.com/</link>
+        <description>Recent content on 心梦博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language><atom:link href="https://example.com/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title></title>
+        <link>https://example.com/p/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/p/</guid>
+        <description>&lt;p&gt;title: &amp;ldquo;在Arch和Windows上安装MariaDB&amp;rdquo;
+date: 2021-09-05T21:43:29+08:00
+draft: true&lt;/p&gt;
+&lt;p&gt;Mariadb是一个可靠的、高性能的、功能全面的数据库，旨在为用户提供长期免费的、向下兼容的、可取代&lt;a class=&#34;link&#34; href=&#34;https://wiki.archlinux.org/title/MySQL&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;MySQL&lt;/a&gt;的数据库服务。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;MariaDB由MySQL的创始人麦克尔·维德纽斯主导开发，他早前曾以10亿美元的价格，将自己创建的公司MySQL卖给了SUN，此后，随着SUN被甲骨文收购，MySQL的所有权也落入Oracle的手中。甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险,因此开源社区采用分支的方式来避开这个风险。所以说呢，MariaDB数据库管理系统是MySQL的一个分支，主要由开源社区在维护，采用GPL授权许可。&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; **MariaDB跟MySQL在绝大多数方面是兼容的，包括API和命令行。对于开发者来说，几乎感觉不到任何不同。但MariaDB不仅仅是Mysql的一个替代品，MariaDB在5.5版本以前，均依照MySQL的版本。但从2012年11月12日起发布的10.0.0版开始，不再依照MySQL的版号。10.0.x版以5.5版为基础，加上移植自MySQL  5.6版的功能和自行开发的新功能。在存储引擎方面，10.0.9版起使用XtraDB（名称代号为Aria）来代替MySQL的InnoDB。目前，新版本发布速度已经超过了Oracle官方的MySQL版本。**
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;个人感觉Mariadb跟MySQL相比更加容易安装，而且是免费的开源软件，要比MySQL好一点。&lt;/p&gt;
+&lt;h2 id=&#34;下面先介绍在archlinux上安装mariadb&#34;&gt;下面先介绍在ArchLinux上安装Mariadb：&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo pacman -S mariadb mariadb-libs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;安装 &lt;code&gt;mariadb&lt;/code&gt;软件包之后，你必须在启动 &lt;code&gt;mariadb.service&lt;/code&gt; &lt;strong&gt;之前&lt;/strong&gt;运行下面这条命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo mariadb-install-db --user&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mysql --basedir&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/usr --datadir&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/var/lib/mysql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后 enable 或者  start  &lt;code&gt;mariadb.service&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt; sudo systemctl &lt;span class=&#34;nb&#34;&gt;enable&lt;/span&gt;  mariadb.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;用下面这个命令启动数据库级别的安全配置助手，来配置一些必要的安全选项（如果下面的无法使用可以试试先启动mariadb，上面的只是设置了开机自启）：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo mysql_secure_installation
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上面代码输入后会有个引导选择是否设置root密码，请&lt;strong&gt;选择No&lt;/strong&gt;，到后面有重新设置root密码的方法，我自己的在这里设置后，后面无法登录。&lt;/p&gt;
+&lt;p&gt;然后设置root帐号的密码（由于修改密码的操作需要停止 &lt;em&gt;mysqld&lt;/em&gt; 守护进程，所以上面我没设置启动mariadb,如果你启动了请先关闭进程）：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo mysqld_safe --skip-grant-tables &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;执行完上面的命令后就可以连接到 MySQL 服务器了，执行以下命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mysql -u root mysql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;修改 root 密码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# FLUSH PRIVILEGES;
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# set password for &amp;#39;root&amp;#39;@&amp;#39;localhost&amp;#39; = password(&amp;#39;MyNewPass&amp;#39;);
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# FLUSH PRIVILEGES;
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# exit
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;再启动 &lt;em&gt;mysqld&lt;/em&gt; 守护进程。&lt;/p&gt;
+&lt;p&gt;由于Mariadb兼容MySQL语法，所以可以使用MySQL 的语法创建用户。&lt;/p&gt;
+&lt;p&gt;上面教程参考&lt;a class=&#34;link&#34; href=&#34;https://wiki.archlinux.org/title/MariaDB_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;MariaDB (简体中文)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://imgtu.com/i/gUr3DS&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://z3.ax1x.com/2021/05/11/gUr3DS.png&#34; &gt;
+		&lt;img src=&#34;https://z3.ax1x.com/2021/05/11/gUr3DS.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			alt=&#34;gUr3DS.png&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;gUr3DS.png&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;在windows上安装mariadb&#34;&gt;在Windows上安装Mariadb:&lt;/h2&gt;
+&lt;p&gt;由于本人没有使用Windows系统，所以使用win7虚拟机安装mariadb安装后无法启动服务，使用管理员帐号也拒绝访问，又一次体现到了Windows稀巴烂的管理员权限，所以我只找了网上的教程复制到这里，理论上不会出现问题。&lt;/p&gt;
+&lt;h3 id=&#34;1-下载mariadb安装包&#34;&gt;1. 下载MariaDB安装包&lt;/h3&gt;
+&lt;p&gt;下载地址：&lt;a class=&#34;link&#34; href=&#34;https://mirrors.tuna.tsinghua.edu.cn/mariadb//mariadb-10.6.0/winx64-packages/mariadb-10.6.0-winx64.zip&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;mariadb-10.6.0-winx64.zip&lt;/a&gt;（清华镜像源）&lt;/p&gt;
+&lt;p&gt;官网：https://mariadb.org/download/ 发现在这里下载自动用的也是清华的镜像地址&lt;/p&gt;
+&lt;h3 id=&#34;2-解压-mariadb-1060-winx64zip-至安装目录&#34;&gt;2. 解压 mariadb-10.6.0-winx64.zip 至安装目录&lt;/h3&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://img-blog.csdnimg.cn/20200731114006890.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI2MjMwODQ3,size_16,color_FFFFFF,t_70&#34; &gt;
+		&lt;img src=&#34;https://img-blog.csdnimg.cn/20200731114006890.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI2MjMwODQ3,size_16,color_FFFFFF,t_70&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3-使用管理员身份运行cmd&#34;&gt;3. 使用管理员身份运行cmd&lt;/h3&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://img-blog.csdnimg.cn/20200731114159214.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI2MjMwODQ3,size_16,color_FFFFFF,t_70&#34; &gt;
+		&lt;img src=&#34;https://img-blog.csdnimg.cn/20200731114159214.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI2MjMwODQ3,size_16,color_FFFFFF,t_70&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;建议提前配置环境变量，配置后就不需要每次都切换到解压的文件夹下的bin目录了，配置环境变量就是配置到解压文件夹的/bin下&lt;/p&gt;
+&lt;h3 id=&#34;5安装mariadb服务&#34;&gt;5.安装MariaDB服务&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;n&#34;&gt;mysql_install_db&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;exe&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;-datadir&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;解压的文件夹&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;\&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;data&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;-service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;mariadb&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;-password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;123456&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;-port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;3306&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;参数说明：&lt;/p&gt;
+&lt;p&gt;&amp;ndash;datadir=数据目录&lt;/p&gt;
+&lt;p&gt;&amp;ndash;service=服务名称&lt;/p&gt;
+&lt;p&gt;&amp;ndash;password=root用户密码&lt;/p&gt;
+&lt;p&gt;&amp;ndash;port=端口&lt;/p&gt;
+&lt;p&gt;详细参数可以执行mysql_install_db.exe &amp;ndash;help查看&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;6-启动mariadb服务服务&#34;&gt;6. 启动MariaDB服务服务&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;n&#34;&gt;net&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;start &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;mariadb&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;至此安装完成,&lt;/p&gt;
+&lt;p&gt;参考：&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/qq_26230847/article/details/107707363&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Windows10 安装 MariaDB&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
